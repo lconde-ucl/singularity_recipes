@@ -20,8 +20,6 @@ chmod ga+rwX /cytofpipe_v2.0/code/*.R
 
 %environment
 export LC_ALL=C
-
 cytofpipeDir=/cytofpipe_v2.0
 export cytofpipeDir
-
 export PATH=/cytofpipe_v2.0:$PATH

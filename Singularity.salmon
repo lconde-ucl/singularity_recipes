@@ -1,27 +1,12 @@
 BootStrap: docker
 From: ubuntu:16.04
 
-##################################
-#notes from andy:
-
-#I didn't check to see if any genomics databases were needed
-#these can generally be installed outside the container
-#but sometimes they need environment variables to be set 
-##################################
 
 %post
 
-    # install some system deps
+    # install some stuff
     apt-get -y update
-    apt-get -y install locales curl bzip2 less unzip git wget vim ant default-jdk
-    # this is a X11 dep
-    apt-get -y install libxext6
-    # tools to open PDF and HTML files
-    apt-get -y install firefox xpdf
-    # some extra devel libs
-    apt-get -y install zlib1g-dev libssl-dev libpng-dev uuid-dev
-    # other
-    locale-gen en_US.UTF-8
+    apt-get -y install gunzip wget 
     apt-get clean
 
     # download and install miniconda3
@@ -33,12 +18,16 @@ From: ubuntu:16.04
     conda config --add channels conda-forge
     conda config --add channels bioconda
 
-    # install some dependencies to build R packages
-    apt-get -y install build-essential gfortran
-
-    # install some bioinfo tools from Bioconda
+    # install what i need from Bioconda
     conda install -y -c bioconda salmon
+    conda install -y -c bioconda bioawk
     
+    # prepare reference files for alevin (https://combine-lab.github.io/alevin-tutorial/2018/setting-up-resources/)
+    wget ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_32/gencode.v32.pc_transcripts.fa.gz
+    salmon index -i index -k 31 --gencode -p 1 -t gencode.v32.pc_transcripts.fa.gz
+    wget ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_32/gencode.v32.primary_assembly.annotation.gtf.gz
+    bioawk -c gff '$feature=="transcript" {print $group}' <(gunzip -c gencode.v32.primary_assembly.annotation.gtf.gz) | awk -F ' ' '{print substr($4,2,length($4)-3) "\t" substr($2,2,length($2)-3)}' - > txp2gene.tsv
+
 
 %environment
     export LANG=en_US.UTF-8

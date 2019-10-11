@@ -2,14 +2,19 @@ BootStrap: docker
 From: ubuntu:16.04
 
 
+%files
+generate_txp2gene.sh
+
 %post
 
     # install some stuff
+    #-------------------
     apt-get -y update
     apt-get -y install curl unzip wget 
     apt-get clean
 
     # download and install miniconda3
+    #---------------------------------
     curl -sSL -O https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
     bash Miniconda3-latest-Linux-x86_64.sh -p /opt/miniconda3 -b
     rm -fr Miniconda3-latest-Linux-x86_64.sh
@@ -19,14 +24,20 @@ From: ubuntu:16.04
     conda config --add channels bioconda
 
     # install what i need from Bioconda
+    #---------------------------------
     conda install -y -c bioconda salmon
     conda install -y -c bioconda bioawk
     
     # prepare reference files for alevin (https://combine-lab.github.io/alevin-tutorial/2018/setting-up-resources/)
+    #---------------------------------------------------------------------------------------------------------------
     wget ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_32/gencode.v32.pc_transcripts.fa.gz
     salmon index -i index -k 31 --gencode -p 1 -t gencode.v32.pc_transcripts.fa.gz
     wget ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_32/gencode.v32.primary_assembly.annotation.gtf.gz
-    bioawk -c gff '$feature=="transcript" {print $group}' <(gunzip -c gencode.v32.primary_assembly.annotation.gtf.gz) | awk -F ' ' '{print substr($4,2,length($4)-3) "\t" substr($2,2,length($2)-3)}' - > txp2gene.tsv
+
+    #- copy the below line to file and execute it, otherwise the buoild fails because of the parenthesis
+    #- maybe there is a way to scape it?
+    #-     bioawk -c gff '$feature=="transcript" {print $group}' < (gunzip -c gencode.v32.primary_assembly.annotation.gtf.gz) | awk -F ' ' '{print substr($4,2,length($4)-3) "\t" substr($2,2,length($2)-3)}' - > txp2gene.tsv
+    bash generate_txp2gene.sh
 
 
 %environment

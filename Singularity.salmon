@@ -2,10 +2,6 @@ BootStrap: docker
 From: ubuntu:16.04
 
 
-%files
-txp2gene.tsv
-#generate_txp2gene.sh
-
 %post
 
     # install some stuff
@@ -34,17 +30,14 @@ txp2gene.tsv
     wget ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_32/gencode.v32.pc_transcripts.fa.gz
     salmon index -i index -k 31 --gencode -p 1 -t gencode.v32.pc_transcripts.fa.gz
     wget ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_32/gencode.v32.primary_assembly.annotation.gtf.gz
+    gunzip -c gencode.v32.primary_assembly.annotation.gtf.gz > gencode.v32.primary_assembly.annotation.gtf
+    bioawk -c gff '$feature=="transcript" {print $group}' gencode.v32.primary_assembly.annotation.gtf | awk -F ' ' '{print substr($4,2,length($4)-3) "\t" substr($2,2,length($2)-3)}' - > txp2gene.tsv
 
-    #- copy the below line to file and execute it, otherwise the buoild fails because of the parenthesis
-    #- maybe there is a way to scape it?
-    #-     bioawk -c gff '$feature=="transcript" {print $group}' < (gunzip -c gencode.v32.primary_assembly.annotation.gtf.gz) | awk -F ' ' '{print substr($4,2,length($4)-3) "\t" substr($2,2,length($2)-3)}' - > txp2gene.tsv
-    #- bash generate_txp2gene.sh
+    mkdir /scRNAseq_refs
+    mv gencode.v32.pc_transcripts.fa.gz index gencode.v32.primary_assembly.annotation.gtf txp2gene.tsv /scRNAseq_refs/.
 
 
 %environment
-    export LANG=en_US.UTF-8
-    export LANGUAGE=en_US:en
-    export LC_ALL=en_US.UTF-8
-    export XDG_RUNTIME_DIR=""
-export PATH=/opt/miniconda3/bin:$PATH
+    export LC_ALL=C
+    export PATH=/opt/miniconda3/bin:$PATH
 

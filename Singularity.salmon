@@ -6,7 +6,7 @@ From: ubuntu:16.04
 
     # install some stuff
     apt-get -y update
-    apt-get -y install gunzip wget 
+    apt-get -y install unzip wget 
     apt-get clean
 
     # download and install miniconda3

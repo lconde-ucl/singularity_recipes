@@ -3,7 +3,8 @@ From: ubuntu:16.04
 
 
 %files
-generate_txp2gene.sh
+txp2gene.tsv
+#generate_txp2gene.sh
 
 %post
 
@@ -37,7 +38,7 @@ generate_txp2gene.sh
     #- copy the below line to file and execute it, otherwise the buoild fails because of the parenthesis
     #- maybe there is a way to scape it?
     #-     bioawk -c gff '$feature=="transcript" {print $group}' < (gunzip -c gencode.v32.primary_assembly.annotation.gtf.gz) | awk -F ' ' '{print substr($4,2,length($4)-3) "\t" substr($2,2,length($2)-3)}' - > txp2gene.tsv
-    bash generate_txp2gene.sh
+    #- bash generate_txp2gene.sh
 
 
 %environment

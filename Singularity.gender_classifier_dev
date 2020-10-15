@@ -1,0 +1,58 @@
+Bootstrap: docker
+From: ubuntu:16.04
+
+%runscript
+
+	echo "Running the container.."
+
+%post
+
+	# Install latest version of R (https://linuxize.com/post/how-to-install-r-on-ubuntu-18-04/)
+	#  (do it this way otherwise by default will install 3.2)
+	
+	apt -y update
+	
+	apt install -y apt-transport-https software-properties-common
+	apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E298A3A825C0D65DFD57CBB651716619E084DAB9
+	add-apt-repository 'deb https://cloud.r-project.org/bin/linux/ubuntu xenial-cran35/'
+	
+	apt -y update
+	apt -y install r-base-core
+
+	# Install required R packages
+	R --slave -e 'install.packages("BiocManager", dependencies=TRUE, repos = "http://cran.us.r-project.org")'
+	R --slave -e 'BiocManager::install("tximport")' 
+	R --slave -e 'BiocManager::install("dplyr")' 
+
+	R --slave -e 'install.packages("caret", dependencies=TRUE, repos = "http://cran.us.r-project.org")'
+	R --slave -e 'install.packages("factoextra", dependencies=TRUE, repos = "http://cran.us.r-project.org")' 
+#	R --slave -e 'install.packages("rmarkdown", dependencies=TRUE, repos = "http://cran.us.r-project.org")'
+
+	# install pandoc to generate summary pdf (https://stackoverflow.com/questions/22081991/rmarkdown-pandoc-pdflatex-not-found)
+#	apt -y install pandoc
+#	apt-get -y --no-install-recommends install texlive-latex-base texlive-fonts-recommended texlive-latex-extra lmodern
+
+	# install other stuff 
+	apt-get -y install curl wget unzip
+	
+	apt-get clean
+	
+
+	# download and install miniconda3
+	#---------------------------------
+	curl -sSL -O https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
+	bash Miniconda3-latest-Linux-x86_64.sh -p /opt/miniconda3 -b
+	rm -fr Miniconda3-latest-Linux-x86_64.sh
+	export PATH=/opt/miniconda3/bin:$PATH
+	conda update -n base conda
+	conda config --add channels conda-forge
+	conda config --add channels bioconda
+
+	# install what i need from Bioconda
+	#---------------------------------
+	conda install -y -c bioconda kallisto
+    
+%environment
+	export LC_ALL=C
+	export PATH=/opt/miniconda3/bin:$PATH
+

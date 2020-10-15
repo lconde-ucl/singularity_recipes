@@ -19,7 +19,7 @@ From: ubuntu:16.04
 	apt -y update
 	apt -y install r-base-core
 
-	#- Add libcurl as some dependencies below complained of not having it installed
+	#- Add libcurl and opensll as some dependencies below complained of not having them installed
 	apt-get -y install libssl-dev
 	apt-get -y install libcurl4-openssl-dev
 	apt-get -y install libhdf5-dev

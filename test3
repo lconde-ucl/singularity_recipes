@@ -1,0 +1,41 @@
+Bootstrap: docker
+From: ubuntu:16.04
+
+%runscript
+
+	echo "Running container 3..."
+
+%post
+
+	
+	# install curl (plus a couple pother things that I will need later)
+	#--------------------------------------------------------------------
+	apt -y update
+	apt-get -y install curl wget unzip 
+	apt-get clean
+
+	
+	# download and install miniconda3
+	#---------------------------------
+	curl -sSL -O https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
+	bash Miniconda3-latest-Linux-x86_64.sh -p /opt/miniconda3 -b
+	rm -fr Miniconda3-latest-Linux-x86_64.sh
+	export PATH=/opt/miniconda3/bin:$PATH
+	conda update -n base conda
+	conda config --add channels defaults
+	conda config --add channels conda-forge
+	conda config --add channels bioconda
+
+
+	# install R from Bioconda
+	#---------------------------------
+	
+	conda install -c bioconda r-essentials r-base
+
+	
+	
+		    
+%environment
+	export LC_ALL=C
+
+

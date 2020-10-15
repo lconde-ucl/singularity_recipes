@@ -19,6 +19,12 @@ From: ubuntu:16.04
 	apt -y update
 	apt -y install r-base-core
 
+	#- Add libcurl as some dependencies below complained of not having it installed
+	apt-get -y install libssl-dev
+	apt-get -y install libcurl4-openssl-dev
+	apt-get -y install libhdf5-dev
+	apt-get -y install libxml2-dev
+
 	# Install required R packages
 	R --slave -e 'install.packages("BiocManager", dependencies=TRUE, repos = "http://cran.us.r-project.org")'
 	R --slave -e 'BiocManager::install("tximport")' 

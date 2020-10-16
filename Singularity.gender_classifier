@@ -59,7 +59,8 @@ From: ubuntu:20.04
 	#---------------------------------
 	cd /usr/bin
 	wget https://github.com/UCL-BLIC/gender_classifier/archive/v0.1.zip
-	unzip gender_classifier-0.1.zip
+	unzip v0.1.zip
+	rm -rf v0.1.zip
 	chmod ga+rwX gender_classifier-0.1/*.pl
 	chmod -R ga+rwX gender_classifier-0.1/code/
 

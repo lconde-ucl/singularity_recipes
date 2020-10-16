@@ -50,7 +50,7 @@ From: ubuntu:20.04
 	# install kallisto
 	#---------------------------------
 	cd /usr/bin
-	wget "https://github.com/pachterlab/kallisto/releases/download/v0.46.2/kallisto_linux-v0.46.1.tar.gz"
+	wget "https://github.com/pachterlab/kallisto/releases/download/v0.46.2/kallisto_linux-v0.46.2.tar.gz"
 	tar xvf kallisto_linux-v0.46.2.tar.gz
 	rm -rf kallisto_linux-v0.46.2.tar.gz
 	rm -rf kallisto/test/

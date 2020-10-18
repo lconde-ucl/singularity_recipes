@@ -32,7 +32,8 @@ From: ubuntu:20.04
 	R --slave -e 'install.packages("BiocManager", dependencies=TRUE, repos = "http://cran.us.r-project.org")'
 	R --slave -e 'BiocManager::install("tximport")' 
 	R --slave -e 'BiocManager::install("dplyr")' 
-
+	R --slave -e 'BiocManager::install("rhdf5")'
+	
 	R --slave -e 'install.packages("caret", dependencies=TRUE, repos = "http://cran.us.r-project.org")'
 	R --slave -e 'install.packages("factoextra", dependencies=TRUE, repos = "http://cran.us.r-project.org")' 
 	R --slave -e 'install.packages("rmarkdown", dependencies=TRUE, repos = "http://cran.us.r-project.org")'

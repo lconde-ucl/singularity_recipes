@@ -32,8 +32,8 @@ From: ubuntu:20.04
 	R --slave -e 'install.packages("BiocManager", dependencies=TRUE, repos = "http://cran.us.r-project.org")'
 	R --slave -e 'BiocManager::install("tximport")' 
 	R --slave -e 'BiocManager::install("dplyr")' 
-	R --slave -e 'BiocManager::install("rhdf5")'
-	
+	R --slave -e 'BiocManager::install("rhdf5")' 
+
 	R --slave -e 'install.packages("caret", dependencies=TRUE, repos = "http://cran.us.r-project.org")'
 	R --slave -e 'install.packages("factoextra", dependencies=TRUE, repos = "http://cran.us.r-project.org")' 
 	R --slave -e 'install.packages("rmarkdown", dependencies=TRUE, repos = "http://cran.us.r-project.org")'
@@ -71,3 +71,4 @@ From: ubuntu:20.04
 	export PATH=$PWD:$PATH
 	export PATH=/usr/bin/kallisto:$PATH
 	export PATH=/usr/bin/gender_classifier-0.1:$PATH
+
